@@ -7,7 +7,10 @@ const morgan = require('morgan');
 const config = require('config');
 
 const genres = require('./routes/generes');
-app.use('/api/genres',genres);
+const home = require('./routes/home');
+
+app.use('/api/genres', genres);
+app.use('/', home);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
