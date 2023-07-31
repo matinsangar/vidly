@@ -28,7 +28,11 @@ if (process.env.NODE_ENV === "development") {
     startUpDebugger("HELLO now we are in startUp debugger in development mode");
 }
 
-
+//middlewares
+const logger = require('./middlewares/log');
+const auth = require('./middlewares/auth');
+app.use(logger.log);
+app.use(auth.auth);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
