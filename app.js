@@ -9,6 +9,14 @@ const genres = require('./routes/generes');
 const home = require('./routes/home');
 
 const startUpDebugger = require('debug')("app:startup");
+//MongoDB
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/vildy')
+    .then(() => console.log("connected"))
+    .catch(err => console.error(err))
+    .finally(() => console.log("Finished task"))
+
+
 
 //config
 const config = require('config');
@@ -29,10 +37,10 @@ if (process.env.NODE_ENV === "development") {
 }
 
 //middlewares
-const logger = require('./middlewares/log');
-const auth = require('./middlewares/auth');
-app.use(logger.log);
-app.use(auth.auth);
+// const logger = require('./middlewares/log');
+// const auth = require('./middlewares/auth');
+// app.use(logger.log);
+// app.use(auth.auth);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
