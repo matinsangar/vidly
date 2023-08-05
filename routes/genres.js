@@ -1,19 +1,14 @@
+// routes/genre.js
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
-const mongoose = require('mongoose');
+const { Genre } = require('../models/genre'); // Import the Genre model from the models/genre.js file
 
 router.use(express.json());
 
-const genreSchema = new mongoose.Schema({
-    name: { type: String, required: true, lowercase: true },
-});
-
-const Genre = mongoose.model('Genre', genreSchema);
-
 async function createGenre() {
     const genre = new Genre({
-        name: "Biography"
+        name: "anime"
     });
     try {
         const result = await genre.save();
@@ -23,9 +18,8 @@ async function createGenre() {
     }
 }
 
-createGenre();
+//createGenre();
 
-// Validation middleware for POST route
 const postValidationData = [
     body('name').notEmpty().withMessage('Name is required').isLength({ min: 2 }).withMessage('Name must be at least 3 characters'),
 ];
@@ -107,6 +101,5 @@ router.delete('/:id', async (req, res) => {
         console.error(exp);
     }
 });
-
 
 module.exports = router;

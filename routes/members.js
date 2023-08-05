@@ -1,50 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
-const mongoose = require('mongoose');
-
+const { Member, createMember } = require('../models/members');
 
 router.use(express.json());
 
-const memberSchema = new mongoose.Schema({
-    name: { type: String, required: true, lowercase: true, min: 3, max: 55 },
-    isGold: { type: Boolean, default: false },
-    data: { type: Date, default: Date.now },
-    phone: { type: String, required: true, min: 3, max: 5 },
-})
-
-async function creatMember() {
-    const Member = mongoose.model("Member", memberSchema);
-    const member = new Member({
-        name: "Ian Wright",
-        isGold: true,
-        phone: "5432"
-    });
-    try {
-        const result = await member.save();
-        console.log(result);
-    } catch (exp) {
-        console.error(exp);
-    }
-}
-
-//creatMember();
-
 router.get('/', async (req, res) => {
-    const member = await mongoose.model("Member", memberSchema).find();
-    res.send(member);
+    const members = await Member.find();
+    res.send(members);
 });
 
 router.get('/:id', async (req, res) => {
     const givenID = req.params.id;
-    const member = await mongoose.model("Member", memberSchema);
     try {
-        const founded_member = await member.findById(givenID);
+        const founded_member = await Member.findById(givenID);
         if (!founded_member) {
-            return res.status(404).send("The genre with the given id was not found");
+            return res.status(404).send("The member with the given id was not found");
         } else {
-            // console.log(founded_member.name);
-            res.send(founded_member)
+            res.send(founded_member);
         }
     } catch (exp) {
         console.error(exp);
@@ -64,7 +37,6 @@ router.post('/', postValidationData, async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const Member = await mongoose.model("Member", memberSchema);
     const member = new Member({
         name: req.body.name,
         isGold: req.body.isGold,
@@ -84,10 +56,9 @@ const putValidationData = [
 ];
 
 router.put('/:id', putValidationData, async (req, res) => {
-    const member = await mongoose.model("Member", memberSchema);
     const givenID = req.params.id;
     try {
-        const founded_member = await member.findByIdAndUpdate(
+        const founded_member = await Member.findByIdAndUpdate(
             givenID,
             {
                 name: req.body.name,
@@ -97,7 +68,7 @@ router.put('/:id', putValidationData, async (req, res) => {
             { new: true } // Return the updated genre
         );
         if (!founded_member) {
-            return res.status(404).send(`the genre with given id: ${givenID} was not found`);
+            return res.status(404).send(`The member with given id: ${givenID} was not found`);
         } else {
             res.send(founded_member);
         }
@@ -106,13 +77,13 @@ router.put('/:id', putValidationData, async (req, res) => {
         console.error(exp);
     }
 });
+
 router.delete('/:id', async (req, res) => {
     const memberID = req.params.id;
-    const member = await mongoose.model("Member", memberSchema);
     try {
-        const result = await member.findByIdAndDelete(memberID);
+        const result = await Member.findByIdAndDelete(memberID);
         console.log(result);
-        return res.status(200).send("Delted");
+        return res.status(200).send("Deleted");
     } catch (exp) {
         res.status(500).send('Something went wrong');
         console.error(exp);

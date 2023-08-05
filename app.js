@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 
 //routers
-const genres = require('./routes/generes');
+const genres = require('./routes/genres');
 const home = require('./routes/home');
 const members = require('./routes/members');
 //const movies = require('./routes/movies');
