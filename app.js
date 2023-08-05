@@ -8,12 +8,11 @@ const morgan = require('morgan');
 const genres = require('./routes/genres');
 const home = require('./routes/home');
 const members = require('./routes/members');
-//const movies = require('./routes/movies');
+const movies = require('./routes/movies');
 app.use('/api/genres', genres);
 app.use('/', home);
 app.use('/api/members', members);
-//app.use('/api/movies', movies);
-
+app.use('/api/movies', movies);
 
 const startUpDebugger = require('debug')("app:startup");
 //MongoDB
