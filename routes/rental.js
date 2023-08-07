@@ -38,12 +38,8 @@ async function addRental(member_name, movie_title, dateOut, dateReturned, rental
 };
 
 router.get('/', async (req, res) => {
-
-    // const rentals = await Rental.find().sort('-dateOut');
-    //res.send(rentals);
-
-    addRental('tony adams', 'Interstellar', 3, 5, 10);
-    res.send("new Rental addedd");
+    const rentals = await Rental.find().sort('-dateOut'); // - is for decending
+    res.send(rentals);
 });
 
 const postValidationData = [
@@ -51,8 +47,6 @@ const postValidationData = [
 ];
 
 router.post('/', postValidationData, async (req, res) => {
-    // console.log(req.body.memberId);
-    // console.log(req.body.movieId);
     const mem = await Member.findById(req.body.memberId);
     const movie = await Movie.findById(req.body.movieId);
     try {
@@ -80,6 +74,12 @@ router.post('/', postValidationData, async (req, res) => {
     } catch (exp) {
         console.error(exp);
     }
+});
+
+router.delete('/:id', async (req, res) => {
+    const removable = req.params.id;
+    const rental = await Rental.findByIdAndDelete(removable);
+    console.log(rental);
 });
 
 module.exports = router;
