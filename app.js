@@ -3,16 +3,19 @@ const app = express();
 
 const helmet = require('helmet');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
 //routers
 const genres = require('./routes/genres');
 const home = require('./routes/home');
 const members = require('./routes/members');
 const movies = require('./routes/movies');
+const rentals = require('./routes/rental');
 app.use('/api/genres', genres);
 app.use('/', home);
 app.use('/api/members', members);
 app.use('/api/movies', movies);
+app.use('/api/rentals', rentals);
 
 const startUpDebugger = require('debug')("app:startup");
 //MongoDB
@@ -30,6 +33,7 @@ console.log("The app name is: ", config.get('name'));
 console.log("The Mail Server is: ", config.get('mail'));
 
 app.use(express.json());
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(helmet());
