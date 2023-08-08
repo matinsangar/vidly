@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const User = require('../models/users');
-
+const bcrypt = require('bcrypt');
+//const _ = require('loadash');
 router.use(express.json());
 
 const postValidationData = [
@@ -24,11 +25,17 @@ router.post('/', postValidationData, async (req, res) => {
     if (user) {
         return res.status(400).send("Already we have this user...");
     }
-    user = new User({
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password
-    });
+    user = new User(
+        {
+            username: req.body.username,
+            email: req.body.email,
+            password: req.body.password
+        },
+
+        //       _.pick(req.body, ['name', 'email', 'pasword']),
+    );
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
     try {
         const result = await user.save();
         res.send(result);
