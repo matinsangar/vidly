@@ -17,6 +17,13 @@ router.get('/', async (req, res) => {
     res.send(users);
 });
 
+router.get('/me', auth, async (req, res) => { // in this rout we dont wanna to use :id beacuse with having that id of another user 
+    //we could access others data 
+    // so by passing TOKEN in x-auth-token header req we only show the wanted information
+    const user = await User.findById(req.user._id).select('-password');
+    res.send(user);
+});
+
 router.post('/', auth, postValidationData, async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -46,10 +53,22 @@ router.post('/', auth, postValidationData, async (req, res) => {
 
         // const Token = user.generateAuthToken();
         res.header('x-auth-token', Token).send(user);
-        console.log(result);
+        console.log(Token);
     } catch (exp) {
         console.log(exp);
     }
 });
+
+//we never save a tokne in our db or machine...
+
+function generateToken(userId) {
+    const payload = { _id: userId };
+    const SecretKey = config.get('jwtPrivateKey');
+    const Token = jwt.sign(payload, SecretKey);
+
+    console.log(`the Token is : ${Token}`);
+};
+
+//generateToken("64d206d9496f92c2fd24192e");
 
 module.exports = router;
