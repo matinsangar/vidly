@@ -1,4 +1,5 @@
 // routes/genre.js
+const auth = require('../middlewares/auth');
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
@@ -43,7 +44,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/', postValidationData, async (req, res) => {
+router.post('/', auth, async (req, res) => {
     //console.log(req.body);
 
     const errors = validationResult(req);

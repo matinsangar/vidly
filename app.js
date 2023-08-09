@@ -51,7 +51,8 @@ if (process.env.NODE_ENV === "development") {
 // const auth = require('./middlewares/auth');
 // app.use(logger.log);
 // app.use(auth.auth);
-
+const auth_middleware = require('./middlewares/auth');
+app.use(auth_middleware);
 
 const result = config.get("jwtPrivateKey");
 if (!result) {

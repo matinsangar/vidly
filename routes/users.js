@@ -5,6 +5,7 @@ const User = require('../models/users');
 const bcrypt = require('bcrypt');
 const config = require('config');
 const jwt = require('jsonwebtoken');
+const auth = require('../middlewares/auth');
 router.use(express.json());
 
 const postValidationData = [
@@ -16,7 +17,7 @@ router.get('/', async (req, res) => {
     res.send(users);
 });
 
-router.post('/', postValidationData, async (req, res) => {
+router.post('/', auth, postValidationData, async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         console.log(errors.array().map((err) => err.msg));
@@ -39,11 +40,11 @@ router.post('/', postValidationData, async (req, res) => {
     try {
         const result = await user.save();
         // res.send(result);
-        // const payload = { _id: user._id };
-        // const SecretKey = config.get('jwtPrivateKey');
-        // const Token = jwt.sign(payload, SecretKey);
+        const payload = { _id: user._id };
+        const SecretKey = config.get('jwtPrivateKey');
+        const Token = jwt.sign(payload, SecretKey);
 
-        const Token = user.generateAuthToken;
+        // const Token = user.generateAuthToken();
         res.header('x-auth-token', Token).send(user);
         console.log(result);
     } catch (exp) {
