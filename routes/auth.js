@@ -8,11 +8,8 @@ const crypto = require('crypto');
 const config = require('config');
 router.use(express.json());
 
-const generateSecretKey = () => {
-    return crypto.randomBytes(32).toString('hex');
-};
 
-const SecretKey = config.get("jwtPrivateKey");
+
 
 const validate = [
     body('email').isEmail().withMessage('Invalid email address'),
@@ -40,9 +37,8 @@ router.post('/', validate, async (req, res) => {
         if (!validPassword) {
             return res.status(400).send("Incorrect email or password");
         }
-        const payload = { _id: user._id };
-        const Token = jwt.sign(payload, SecretKey);
-        res.send(Token);
+        const token = user.generateAuthToken();
+        res.send(token);
     } catch (error) {
         console.error(error);
         return res.status(500).send('Something went wrong');

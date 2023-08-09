@@ -39,9 +39,11 @@ router.post('/', postValidationData, async (req, res) => {
     try {
         const result = await user.save();
         // res.send(result);
-        const payload = { _id: user._id };
-        const SecretKey = config.get('jwtPrivateKey');
-        const Token = jwt.sign(payload, SecretKey);
+        // const payload = { _id: user._id };
+        // const SecretKey = config.get('jwtPrivateKey');
+        // const Token = jwt.sign(payload, SecretKey);
+
+        const Token = user.generateAuthToken;
         res.header('x-auth-token', Token).send(user);
         console.log(result);
     } catch (exp) {
