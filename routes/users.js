@@ -3,7 +3,8 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const User = require('../models/users');
 const bcrypt = require('bcrypt');
-//const _ = require('loadash');
+const config = require('config');
+const jwt = require('jsonwebtoken');
 router.use(express.json());
 
 const postValidationData = [
@@ -25,20 +26,23 @@ router.post('/', postValidationData, async (req, res) => {
     if (user) {
         return res.status(400).send("Already we have this user...");
     }
+
     user = new User(
         {
             username: req.body.username,
             email: req.body.email,
             password: req.body.password
         },
-
-        //       _.pick(req.body, ['name', 'email', 'pasword']),
     );
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
     try {
         const result = await user.save();
-        res.send(result);
+        // res.send(result);
+        const payload = { _id: user._id };
+        const SecretKey = config.get('jwtPrivateKey');
+        const Token = jwt.sign(payload, SecretKey);
+        res.header('x-auth-token', Token).send(user);
         console.log(result);
     } catch (exp) {
         console.log(exp);
