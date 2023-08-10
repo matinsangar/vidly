@@ -8,9 +8,6 @@ const crypto = require('crypto');
 const config = require('config');
 router.use(express.json());
 
-
-
-
 const validate = [
     body('email').isEmail().withMessage('Invalid email address'),
     body('password').isLength({ min: 3, max: 255 }).withMessage('Password must be between 3 and 255 characters'),

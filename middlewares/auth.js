@@ -6,9 +6,8 @@ function auth(req, res, next) {
     const token = req.header("x-auth-token"); //extrat the token
 
     if (!token) {
-        return res.status(401).send("Access denied. No token provided...");
+        return res.status(401).send("Access denied. No token provided!!! Try agian later...");
     }
-
     try {
         const decoded = jwt.verify(token, secretKey); // if token and secKey can match then decoded return an object
         req.user = decoded; //here we use this opbject   //not req.body

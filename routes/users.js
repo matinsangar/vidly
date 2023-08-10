@@ -9,7 +9,8 @@ const auth = require('../middlewares/auth');
 router.use(express.json());
 
 const postValidationData = [
-    //body('name').notEmpty().withMessage('Name is required').isLength({ min: 2 }).withMessage('Name must be at least 3 characters'),
+    body('username').notEmpty().withMessage("Username is required").isLength({ min: 2, max: 55 }).withMessage("Name must be in range 2 to 55 char"),
+    body('email').isEmail()
 ];
 
 router.get('/', async (req, res) => {
@@ -24,7 +25,7 @@ router.get('/me', auth, async (req, res) => { // in this rout we dont wanna to u
     res.send(user);
 });
 
-router.post('/', auth, postValidationData, async (req, res) => {
+router.post('/', postValidationData, async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         console.log(errors.array().map((err) => err.msg));
@@ -39,7 +40,8 @@ router.post('/', auth, postValidationData, async (req, res) => {
         {
             username: req.body.username,
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            isAdmin: req.body.isAdmin
         },
     );
     const salt = await bcrypt.genSalt(10);
@@ -47,7 +49,7 @@ router.post('/', auth, postValidationData, async (req, res) => {
     try {
         const result = await user.save();
         // res.send(result);
-        const payload = { _id: user._id };
+        const payload = { _id: user._id, isAdmin: user.isAdmin };
         const SecretKey = config.get('jwtPrivateKey');
         const Token = jwt.sign(payload, SecretKey);
 
@@ -58,7 +60,6 @@ router.post('/', auth, postValidationData, async (req, res) => {
         console.log(exp);
     }
 });
-
 //we never save a tokne in our db or machine...
 
 function generateToken(userId) {
@@ -69,6 +70,7 @@ function generateToken(userId) {
     console.log(`the Token is : ${Token}`);
 };
 
-//generateToken("64d206d9496f92c2fd24192e");
+//generateToken("64d49b77a606bd74ef178692");
+
 
 module.exports = router;

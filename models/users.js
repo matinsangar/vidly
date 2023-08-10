@@ -24,7 +24,8 @@ const userSchema = new mongoose.Schema({
         trim: true,
         minlength: 4,
         maxlength: 1024,
-    }
+    },
+    isAdmin: Boolean
 });
 userSchema.method.generateAuthToken = function () {
     const payload = { _id: this._id };

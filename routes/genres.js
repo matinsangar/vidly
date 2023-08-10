@@ -1,15 +1,15 @@
 // routes/genre.js
 const auth = require('../middlewares/auth');
+const checkAdmin = require('../middlewares/admin');
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const { Genre } = require('../models/genre'); // Import the Genre model from the models/genre.js file
-
 router.use(express.json());
 
 async function createGenre() {
     const genre = new Genre({
-        name: "anime"
+        name: "historical"
     });
     try {
         const result = await genre.save();
@@ -44,7 +44,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/', auth, async (req, res) => {
+router.post('/', postValidationData,auth, async (req, res) => {
     //console.log(req.body);
 
     const errors = validationResult(req);
@@ -91,7 +91,7 @@ router.put('/:id', putValidationData, async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', [auth, checkAdmin], async (req, res) => {
     const genreID = req.params.id;
     try {
         const result = await Genre.findByIdAndDelete(genreID);
