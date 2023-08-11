@@ -14,8 +14,12 @@ const postValidationData = [
 ];
 
 router.get('/', async (req, res) => {
-    const users = await User.find();
-    res.send(users);
+    try {
+        const users = await User.find();
+        res.send(users);
+    } catch (exp) {
+        res.status(500).send("Something failed...");
+    }
 });
 
 router.get('/me', auth, async (req, res) => { // in this rout we dont wanna to use :id beacuse with having that id of another user 

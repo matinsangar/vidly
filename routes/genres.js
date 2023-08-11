@@ -7,6 +7,10 @@ const { body, validationResult } = require('express-validator');
 const { Genre } = require('../models/genre'); // Import the Genre model from the models/genre.js file
 router.use(express.json());
 
+const postValidationData = [
+    body('name').notEmpty().withMessage('Name is required').isLength({ min: 2 }).withMessage('Name must be at least 3 characters'),
+];
+
 async function createGenre() {
     const genre = new Genre({
         name: "historical"
@@ -21,13 +25,13 @@ async function createGenre() {
 
 //createGenre();
 
-const postValidationData = [
-    body('name').notEmpty().withMessage('Name is required').isLength({ min: 2 }).withMessage('Name must be at least 3 characters'),
-];
-
 router.get('/', async (req, res) => {
-    const genre = await Genre.find();
-    res.send(genre);
+    try {
+        const genre = await Genre.find();
+        res.send(genre);
+    } catch (exp) {
+        res.status(500).send("Something Failed...");
+    }
 });
 
 router.get('/:id', async (req, res) => {
@@ -44,7 +48,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/', postValidationData,auth, async (req, res) => {
+router.post('/', postValidationData, auth, async (req, res) => {
     //console.log(req.body);
 
     const errors = validationResult(req);
