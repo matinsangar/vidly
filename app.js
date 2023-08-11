@@ -13,6 +13,7 @@ const movies = require('./routes/movies');
 const rentals = require('./routes/rental');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
+
 app.use('/api/genres', genres);
 app.use('/', home);
 app.use('/api/members', members);
@@ -47,12 +48,10 @@ if (process.env.NODE_ENV === "development") {
 }
 
 //middlewares
-// const logger = require('./middlewares/log');
-// const auth = require('./middlewares/auth');
-// app.use(logger.log);
-// app.use(auth.auth);
 const auth_middleware = require('./middlewares/auth');
+const error_middleware = require('./middlewares/error');
 app.use(auth_middleware);
+app.use(error_middleware);
 
 const result = config.get("jwtPrivateKey");
 if (!result) {

@@ -25,12 +25,13 @@ async function createGenre() {
 
 //createGenre();
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
         const genre = await Genre.find();
         res.send(genre);
     } catch (exp) {
-        res.status(500).send("Something Failed...");
+        // res.status(500).send("Something Failed...");
+        next(exp);
     }
 });
 
