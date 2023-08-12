@@ -26,7 +26,7 @@ async function createGenre() {
 //createGenre();
 
 router.get('/', async (req, res) => {
-   // throw new Error("Could not get the Genres...");  ////just for testing the Winston
+    throw new Error("Could not get the Genres...");  ////just for testing the Winston
     const genre = await Genre.find();
     res.send(genre);
 });

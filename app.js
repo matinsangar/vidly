@@ -4,6 +4,7 @@ const app = express();
 const helmet = require('helmet');
 const morgan = require('morgan');
 const winston = require('winston');
+require('winston-mongodb');
 const bodyParser = require('body-parser');
 //routers
 const genres = require('./routes/genres');
@@ -49,6 +50,12 @@ winston.configure({
     transports: [
         new winston.transports.File({ filename: 'logfile.log' }),
         new winston.transports.Console(),   //for tracking in console 
+        new winston.transports.MongoDB({
+            db: 'mongodb://localhost/vildy',
+            collection: 'logs',
+            storeHost: true,
+            options: { useUnifiedTopology: true },
+        })
     ]
 })
 

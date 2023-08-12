@@ -6,6 +6,14 @@ function errHandler(err, req, res, next) {
     //there's no need to continue processing 
     //so do not say next();
 
+    //LEVELS
+    //error
+    //warn
+    //info
+    //verbose
+    //debug
+    //silly
+
 }
 
 module.exports = errHandler;
