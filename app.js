@@ -48,9 +48,13 @@ if (process.env.NODE_ENV === "development") {
 winston.configure({
     transports: [
         new winston.transports.File({ filename: 'logfile.log' }),
-        new winston.transports.Console()   //for tracking in console 
+        new winston.transports.Console(),   //for tracking in console 
     ]
 })
+
+// winston.ExceptionHandler(new winston.transports.File({ filename: 'ExpHandler.log' }));
+// winston.RejectionHandler(new winston.transports.File({ filename: 'RjctHandler.log' }));
+
 
 //middlewares
 const auth_middleware = require('./middlewares/auth');
