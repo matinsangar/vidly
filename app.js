@@ -30,6 +30,9 @@ mongoose.connect('mongodb://localhost/vildy')
     .catch(err => console.error(err))
     .finally(() => console.log("Finished task"));
 
+
+
+
 //config
 const config = require('config');
 console.log("The app name is: ", config.get('name'));
@@ -55,13 +58,19 @@ winston.configure({
             collection: 'logs',
             storeHost: true,
             options: { useUnifiedTopology: true },
+            level: 'info'
         })
     ]
 })
 
-// winston.ExceptionHandler(new winston.transports.File({ filename: 'ExpHandler.log' }));
-// winston.RejectionHandler(new winston.transports.File({ filename: 'RjctHandler.log' }));
-
+process.on('uncaughtException', (exp) => {
+    winston.error(exp.message, exp);
+  //  process.exit(1);
+});
+process.on('unhandledRejection', (exp) => {
+    winston.error(exp.message, exp);
+   // process.exit(1);
+});
 
 //middlewares
 const auth_middleware = require('./middlewares/auth');
