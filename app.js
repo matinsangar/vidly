@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const helmet = require('helmet');
 const morgan = require('morgan');
+const winston = require('winston');
 const bodyParser = require('body-parser');
 //routers
 const genres = require('./routes/genres');
@@ -28,8 +29,6 @@ mongoose.connect('mongodb://localhost/vildy')
     .catch(err => console.error(err))
     .finally(() => console.log("Finished task"));
 
-
-
 //config
 const config = require('config');
 console.log("The app name is: ", config.get('name'));
@@ -45,6 +44,13 @@ if (process.env.NODE_ENV === "development") {
     app.use(morgan('tiny'));
     startUpDebugger("HELLO now we are in startUp debugger in development mode");
 }
+
+winston.configure({
+    transports: [
+        new winston.transports.File({ filename: 'logfile.log' }),
+        new winston.transports.Console()   //for tracking in console 
+    ]
+})
 
 //middlewares
 const auth_middleware = require('./middlewares/auth');
