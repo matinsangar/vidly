@@ -25,14 +25,9 @@ async function createGenre() {
 
 //createGenre();
 
-router.get('/', async (req, res, next) => {
-    try {
-        const genre = await Genre.find();
-        res.send(genre);
-    } catch (exp) {
-        // res.status(500).send("Something Failed...");
-        next(exp);
-    }
+router.get('/', async (req, res) => {
+    const genre = await Genre.find();
+    res.send(genre);
 });
 
 router.get('/:id', async (req, res) => {

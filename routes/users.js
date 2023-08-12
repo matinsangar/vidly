@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const auth = require('../middlewares/auth');
+
 router.use(express.json());
 
 const postValidationData = [
@@ -14,12 +15,8 @@ const postValidationData = [
 ];
 
 router.get('/', async (req, res) => {
-    try {
-        const users = await User.find();
-        res.send(users);
-    } catch (exp) {
-        res.status(500).send("Something failed...");
-    }
+    const users = await User.find();
+    res.send(users);
 });
 
 router.get('/me', auth, async (req, res) => { // in this rout we dont wanna to use :id beacuse with having that id of another user 

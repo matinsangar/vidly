@@ -1,10 +1,9 @@
+require('express-async-errors'); //amazing way to catch errors at runtime without using try/catch blocks in your async functions
 const express = require('express');
 const app = express();
-
 const helmet = require('helmet');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-
 //routers
 const genres = require('./routes/genres');
 const home = require('./routes/home');
