@@ -60,17 +60,14 @@ winston.configure({
             options: { useUnifiedTopology: true },
             level: 'info'
         })
+    ],
+    exceptionHandlers: [
+        new winston.transports.File({ filename: 'UncoughtExeptions.log' })
+    ],
+    rejectionHandlers: [
+        new winston.transports.File({ filename: "UnhandledRejection.log" })
     ]
 })
-
-process.on('uncaughtException', (exp) => {
-    winston.error(exp.message, exp);
-  //  process.exit(1);
-});
-process.on('unhandledRejection', (exp) => {
-    winston.error(exp.message, exp);
-   // process.exit(1);
-});
 
 //middlewares
 const auth_middleware = require('./middlewares/auth');
