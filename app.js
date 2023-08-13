@@ -6,22 +6,10 @@ const morgan = require('morgan');
 const winston = require('winston');
 require('winston-mongodb');
 const bodyParser = require('body-parser');
-//routers
-const genres = require('./routes/genres');
-const home = require('./routes/home');
-const members = require('./routes/members');
-const movies = require('./routes/movies');
-const rentals = require('./routes/rental');
-const users = require('./routes/users');
-const auth = require('./routes/auth');
 
-app.use('/api/genres', genres);
-app.use('/', home);
-app.use('/api/members', members);
-app.use('/api/movies', movies);
-app.use('/api/rentals', rentals);
-app.use('/api/users', users);
-app.use('/api/auth', auth);
+//routers
+require('./startup/routes')(app)
+
 const startUpDebugger = require('debug')("app:startup");
 //MongoDB
 const mongoose = require('mongoose');
@@ -29,9 +17,6 @@ mongoose.connect('mongodb://localhost/vildy')
     .then(() => console.log("connected"))
     .catch(err => console.error(err))
     .finally(() => console.log("Finished task"));
-
-
-
 
 //config
 const config = require('config');
@@ -71,16 +56,13 @@ winston.configure({
 
 //middlewares
 const auth_middleware = require('./middlewares/auth');
-const error_middleware = require('./middlewares/error');
 app.use(auth_middleware);
-app.use(error_middleware);
 
 const result = config.get("jwtPrivateKey");
 if (!result) {
     console.error("jwtPrivateKey is not defined");
     process.exit(1); //failure so EXIT
 }
-
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
