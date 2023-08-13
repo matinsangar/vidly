@@ -17,10 +17,12 @@ function clean_log() {
             })
         ],
         exceptionHandlers: [
-            new winston.transports.File({ filename: 'UncoughtExeptions.log' })
+            new winston.transports.File({ filename: 'UncoughtExeptions.log' }),
+            new winston.transports.Console({ colorize: true, prettyPrint: true })
         ],
         rejectionHandlers: [
-            new winston.transports.File({ filename: "UnhandledRejection.log" })
+            new winston.transports.File({ filename: "UnhandledRejection.log" }),
+            new winston.transports.Console({ colorize: true, prettyPrint: true })
         ]
     });
 };
