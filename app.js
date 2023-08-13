@@ -1,27 +1,17 @@
-require('express-async-errors'); //amazing way to catch errors at runtime without using try/catch blocks in your async functions
 const express = require('express');
 const app = express();
 const helmet = require('helmet');
 const morgan = require('morgan');
-const winston = require('winston');
-require('winston-mongodb');
+
 const bodyParser = require('body-parser');
 
 //routers
-require('./startup/routes')(app)
+require('./startup/log')();  //First
+require('./startup/routes')(app);
+require('./startup/db')();
+require('./startup/config')();
 
 const startUpDebugger = require('debug')("app:startup");
-//MongoDB
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/vildy')
-    .then(() => console.log("connected"))
-    .catch(err => console.error(err))
-    .finally(() => console.log("Finished task"));
-
-//config
-const config = require('config');
-console.log("The app name is: ", config.get('name'));
-console.log("The Mail Server is: ", config.get('mail'));
 
 app.use(express.json());
 app.use(bodyParser.json());
@@ -34,35 +24,9 @@ if (process.env.NODE_ENV === "development") {
     startUpDebugger("HELLO now we are in startUp debugger in development mode");
 }
 
-winston.configure({
-    transports: [
-        new winston.transports.File({ filename: 'logfile.log' }),
-        new winston.transports.Console(),   //for tracking in console 
-        new winston.transports.MongoDB({
-            db: 'mongodb://localhost/vildy',
-            collection: 'logs',
-            storeHost: true,
-            options: { useUnifiedTopology: true },
-            level: 'info'
-        })
-    ],
-    exceptionHandlers: [
-        new winston.transports.File({ filename: 'UncoughtExeptions.log' })
-    ],
-    rejectionHandlers: [
-        new winston.transports.File({ filename: "UnhandledRejection.log" })
-    ]
-})
-
 //middlewares
 const auth_middleware = require('./middlewares/auth');
 app.use(auth_middleware);
-
-const result = config.get("jwtPrivateKey");
-if (!result) {
-    console.error("jwtPrivateKey is not defined");
-    process.exit(1); //failure so EXIT
-}
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
