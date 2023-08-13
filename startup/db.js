@@ -4,7 +4,7 @@ function clean_db() {
 
     mongoose.connect('mongodb://localhost/vildy')
         .then(() => winston.info("connected"))
-        .finally(() => console.log("Finished task"));
+    //we dont need the catch block beacuse we have handled the uncought rejected promise    
 };
 
 module.exports = clean_db;
