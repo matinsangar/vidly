@@ -1,6 +1,5 @@
 const config = require('config');
 
-
 function clean_config() {
     console.log("The app name is: ", config.get('name'));
     console.log("The Mail Server is: ", config.get('mail'));
