@@ -8,7 +8,7 @@ const { Genre } = require('../models/genre'); // Import the Genre model from the
 router.use(express.json());
 
 const postValidationData = [
-    body('name').notEmpty().withMessage('Name is required').isLength({ min: 2 }).withMessage('Name must be at least 3 characters'),
+    body('name').notEmpty().withMessage('Name is required').isLength({ min: 3 }).withMessage('Name must be at least 3 characters'),
 ];
 
 async function createGenre() {
