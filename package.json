@@ -4,7 +4,7 @@
   "description": "This is the first commit of my vildy project ...",
   "main": "app.js",
   "scripts": {
-    "test": "jest --watchAll --verbose"
+    "test": "jest --watchAll --verbose --coverage "
   },
   "keywords": [],
   "author": "",

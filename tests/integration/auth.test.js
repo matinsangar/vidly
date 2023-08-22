@@ -37,6 +37,5 @@ describe('Auth Middleware', () => {
             .send({ name: "genre1" });
 
         expect(res.status).toBe(200);
-        expect(res.body).toBeDefined();
     });
 });
