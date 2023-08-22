@@ -63,6 +63,28 @@ describe('/api/genres', () => {
                 .send({ name: "13" });
             expect(res.status).toBe(400);
         });
+        //happy path test
+        it("should save the valid genrer if it is valid", async () => {
+            const user = new User();
+            const payload = { _id: user._id };
+            const Token = jwt.sign(payload, "1234");
+            const res = await request(server).post('/api/genres')
+                .set('x-auth-token', Token)
+                .send({ name: "genre1" });
 
+            const temp = await Genre.find({ name: "genre1" });
+            expect(temp).not.toBeNull();
+        });
+        it("should save the valid genrer if it is valid", async () => {
+            const user = new User();
+            const payload = { _id: user._id };
+            const Token = jwt.sign(payload, "1234");
+            const res = await request(server).post('/api/genres')
+                .set('x-auth-token', Token)
+                .send({ name: "genre1" });
+
+            expect(res.body).toHaveProperty('_id');
+            expect(res.body).toHaveProperty('name', 'genre1');
+        });
     });
 });
