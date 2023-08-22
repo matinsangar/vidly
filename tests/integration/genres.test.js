@@ -87,4 +87,32 @@ describe('/api/genres', () => {
             expect(res.body).toHaveProperty('name', 'genre1');
         });
     });
+    describe('DELETE /', () => {
+        it('should delete genre if user is Admin', async () => {
+            const user = new User({ isAdmin: true });
+            const payload = { id: user._id, isAdmin: user.isAdmin };
+            const token = jwt.sign(payload, "1234");
+            const genre = new Genre({ name: "Genre134" });
+            await genre.save();
+            const res = await request(server)
+                .delete(`/api/genres/${genre._id}`)
+                .set('x-auth-token', token);
+            expect(res.status).toBe(200);
+            expect(res.text).toBe('Deleted');
+            const deletedGenre = await Genre.findById(genre._id);
+            expect(deletedGenre).toBeNull();
+        });
+        it('should return 403 if user is not admin', async () => {
+            const user = new User({ isAdmin: false });
+            const payload = { id: user._id, isAdmin: user.isAdmin };
+            const token = jwt.sign(payload, "1234");
+            const genre = new Genre({ name: "Genre134" });
+            await genre.save();
+            const res = await request(server)
+                .delete(`/api/genres/${genre._id}`)
+                .set('x-auth-token', token);
+            expect(res.status).toBe(403);
+            expect(res.text).toBe('Access denied...');
+        });
+    });
 });
