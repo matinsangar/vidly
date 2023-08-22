@@ -31,7 +31,7 @@ describe('/api/genres', () => {
             expect(res.body.length).toBe(2);
             expect(res.body.some(g => g.name === 'genre1')).toBeTruthy();
             expect(res.body.some(g => g.name === 'genre2')).toBeTruthy(); //some method : It checks if at least one element in the array satisfies a certain condition
-        });  //Fix timeout issue we can add timer 
+        });
     });
     describe('GET /:id', () => {
         it('should return a valid Genre with valid given ID', async () => {
