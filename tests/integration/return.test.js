@@ -1,17 +1,17 @@
 const Rental = require('../../models/rental');
-const {Member} = require('../../models/members');
+const { Member } = require('../../models/members');
 const mongoose = require('mongoose');
 const request = require('supertest');
 describe('/api/returns', () => {
     let server;
-    let customerId;
+    let memberId;
+    memberId = new mongoose.Types.ObjectId();
+    movieId = new mongoose.Types.ObjectId();
     beforeEach(async () => {
         server = require("../../app");
-        customerId = new mongoose.Types.ObjectId();
-        movieId = new mongoose.Types.ObjectId();
         const rental = new Rental({
-            customer: {
-                _id: customerId,
+            member: {
+                _id: memberId,
                 name: '12345',
                 phone: '12345',
             },
@@ -30,8 +30,17 @@ describe('/api/returns', () => {
         await Rental.deleteMany();
     });
 
-    it('should work!', async () => {
-        const result = await Rental.findById(rental._id);
-        expect(result).not.toBeNull();
+    it('should return 401 if user is not logged in', async () => {
+        const res = await request(server)
+            .post('/api/returns')
+            .send({ memberId: memberId, movieId: movieId });
+        expect(res.status).toBe(401);
     });
+    it('should return 400 if memberId is not provided', async () => {
+        const res = await request(server)
+            .post('/api/returns')
+            .send({ movieId: movieId });
+        expect(res.status).toBe(400);
+    });
+
 });
