@@ -81,5 +81,4 @@ router.delete('/:id', async (req, res) => {
     const rental = await Rental.findByIdAndDelete(removable);
     console.log(rental);
 });
-
 module.exports = router;
