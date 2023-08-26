@@ -2,6 +2,8 @@ const Rental = require('../../models/rental');
 const { Member } = require('../../models/members');
 const mongoose = require('mongoose');
 const request = require('supertest');
+const jwt = require('jsonwebtoken');
+
 describe('/api/returns', () => {
     let server;
     let memberId;
@@ -37,9 +39,25 @@ describe('/api/returns', () => {
         expect(res.status).toBe(401);
     });
     it('should return 400 if memberId is not provided', async () => {
+
+        const payload = { _id: memberId };
+        const SecretKey = "1234";
+        const token = jwt.sign(payload, SecretKey);
         const res = await request(server)
             .post('/api/returns')
+            .set('x-auth-token', token)
             .send({ movieId: movieId });
+        expect(res.status).toBe(400);
+    });
+    it('should return 400 if movieId is not provided', async () => {
+
+        const payload = { _id: memberId };
+        const SecretKey = "1234";
+        const token = jwt.sign(payload, SecretKey);
+        const res = await request(server)
+            .post('/api/returns')
+            .set('x-auth-token', token)
+            .send({ memberId:memberId });
         expect(res.status).toBe(400);
     });
 
