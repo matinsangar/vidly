@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const helmet = require('helmet');
 const morgan = require('morgan');
 
 const bodyParser = require('body-parser');
@@ -10,6 +9,9 @@ require('./startup/log')();  //First
 require('./startup/routes')(app);
 require('./startup/db')();
 require('./startup/config')();
+if (process.env.NODE_ENV === 'production') {
+    require('./startup/prod')(app);
+}
 
 const startUpDebugger = require('debug')("app:startup");
 
